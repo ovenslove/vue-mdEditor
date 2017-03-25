@@ -1,8 +1,5 @@
 <template>
     <div class="indexContainer">
-       
-        <!--<div class="show"> {{msg}}</div>-->
-    
         <div class="editorContainer">
             <markdown v-bind:mdValues.sync="msg" @childevent="childEventHandler"></markdown>
         </div>
