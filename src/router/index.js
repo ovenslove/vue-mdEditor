@@ -1,13 +1,13 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import Markdown from '@/components/markdown'
+import Index from '@/components/index'
 
 Vue.use(Router)
 
 export default new Router({
     routes: [{
         path: '/',
-        name: 'markdown',
-        component: Markdown
+        name: 'index',
+        component: Index
     }]
 })
