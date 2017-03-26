@@ -1,7 +1,7 @@
 <template>
     <div class="indexContainer">
         <div class="editorContainer">
-            <markdown v-bind:mdValues.sync="msg" @childevent="childEventHandler"></markdown>
+            <markdown :mdValuesP="msg" :fullPageStatusP="true" :editStatusP="false" :previewStatusP="false"  @childevent="childEventHandler"></markdown>
         </div>
     </div>
 </template>

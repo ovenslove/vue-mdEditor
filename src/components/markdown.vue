@@ -1,13 +1,38 @@
 <template>
-    <div class="mdContainer">
+    <div class="mdContainer" :class="{ fullPage: fullPageStatus }">
         <div class="navContainer">
             <div class="nameContainer">OVEN-mdEditor</div>
+            <div class="markContainer">
+                <ul class="markListGroup">
+                    <li class="markListItem" @click="addStrong" title="strong"><b>B</b></li>
+                    <li class="markListItem" @click="addItalic" title="italic"><i>I</i></li>
+                    <li class="markListItem" @click="addStrikethrough" title="strikethrough"><i class="fa fa-strikethrough" aria-hidden="true"></i></li>
+                    <li class="markListItem" @click="addHTitle(1)" title="H1-title">H1</li>
+                    <li class="markListItem" @click="addHTitle(2)" title="H2-title">H2</li>
+                    <li class="markListItem" @click="addHTitle(3)" title="H3-title">H3</li>
+                    <li class="markListItem" @click="addHTitle(4)" title="H4-title">H4</li>
+                    <li class="markListItem" @click="addHTitle(5)" title="H5-title">H5</li>
+                    <li class="markListItem" @click="addHTitle(6)" title="H6-title">H6</li>
+                    <li class="markListItem" @click="addLine" title="line">一</li>
+                    <li class="markListItem" @click="addQuote" title="quote"><i class="fa fa-quote-left" aria-hidden="true"></i></li>
+                    <li class="markListItem" @click="addCode"><i class="fa fa-code" aria-hidden="true"></i></li>
+                    <li class="markListItem" @click="addLink"><i class="fa fa-link" aria-hidden="true"></i></li>
+                    <li class="markListItem" @click="addImage"><i class="fa fa-picture-o" aria-hidden="true"></i></li>
+                    <li class="markListItem" @click="addTable" title="table"><i class="fa fa-table" aria-hidden="true"></i></li>
+                    <li class="markListItem" @click="addUl" title="ul-list"><i class="fa fa-list-ul" aria-hidden="true"></i></li>
+                    <li class="markListItem" @click="addOl" title="ol-list"><i class="fa fa-list-ol" aria-hidden="true"></i></li>
+                    <li class="markListItem" @click="fullPageFn" title="fullpage"><i class="fa fa-arrows-alt" aria-hidden="true"></i></li>
+                    <li class="markListItem" @click="previewFn" title="preview"><i class="fa fa-eye-slash" aria-hidden="true"></i></li>
+                    <li class="markListItem" @click="previewAllFn" title="previewAll"><i class="fa fa-eye" aria-hidden="true"></i></li>
+                </ul>
+    
+            </div>
         </div>
         <div class="mdBodyContainer">
-            <div class="editContainer">
-                <textarea name="" class="mdEditor" v-model="input" v-on:input="updateFn"></textarea>
+            <div class="editContainer" v-if="editStatus">
+                <textarea name="" class="mdEditor" @keydown.9="tabFn" v-model="input"></textarea>
             </div>
-            <div class="previewContainer markdown-body" v-html="compiledMarkdown">
+            <div class="previewContainer markdown-body" v-html="compiledMarkdown" v-if="previewStatus">
             </div>
         </div>
     </div>
@@ -16,6 +41,7 @@
 <script>
     var marked = require('marked');
     import hljs from '../../static/js/highlight.min.js'
+    import range from '../../static/js/rangeFn.js'
     marked.setOptions({
         renderer: new marked.Renderer(),
         gfm: true,
@@ -28,18 +54,188 @@
         highlight: function(code) {
             return hljs.highlightAuto(code).value
         }
-    })
+    });
+    
+    function insertContent(val, that) {
+        let textareaDom = document.querySelector('.mdEditor');
+        let value = textareaDom.value;
+        let point = range.getCursortPosition(textareaDom);
+        let lastChart = value.substring(point - 1, point);
+        let lastFourCharts = value.substring(point - 4, point);
+        if (lastChart != '\n' && value != '' && lastFourCharts != '    ') {
+            val = '\n' + val;
+            range.insertAfterText(textareaDom, val);
+        } else {
+            range.insertAfterText(textareaDom, val);
+        }
+    
+        that.input = document.querySelector('.mdEditor').value;
+    
+    }
     export default {
         name: 'markdown',
-        props: ['mdValues'],
+        props: ['mdValuesP', 'fullPageStatusP', 'editStatusP', 'previewStatusP'],
         data() {
             return {
-                input: this.mdValues
+                input: this.mdValuesP,
+                editStatus: this.editStatusP,
+                previewStatus: this.previewStatusP,
+                fullPageStatus: this.fullPageStatusP
+            }
+        },
+        created: function() {
+            if (!this.editStatus && !this.previewStatus) {
+                this.editStatus = true;
+                this.previewStatus = true;
             }
         },
         methods: {
-            updateFn: function() {
-                this.$emit('childevent', this.input);
+            tabFn: function(evt) {
+                insertContent("    ", this);
+                // 屏蔽屌tab切换事件
+                if (evt.preventDefault) {
+                    evt.preventDefault();
+                } else {
+                    evt.returnValue = false;
+                }
+            },
+            // 添加图片
+            addImage: function(evt) {
+                insertContent("![Vue](https://cn.vuejs.org/images/logo.png)", this);
+            },
+            addHTitle: function(index) {
+                let tmp = '';
+                switch (index) {
+                    case 1:
+                        tmp = '# ';
+                        break;
+                    case 2:
+                        tmp = '## ';
+                        break;
+                    case 3:
+                        tmp = '### ';
+                        break;
+                    case 4:
+                        tmp = '#### ';
+                        break;
+                    case 5:
+                        tmp = '##### ';
+                        break;
+                    case 6:
+                        tmp = '###### ';
+                        break;
+                    default:
+                        break;
+                }
+                insertContent(tmp, this);
+            },
+            addCode: function() {
+                let textareaDom = document.querySelector('.mdEditor');
+                let value = textareaDom.value;
+                let point = range.getCursortPosition(textareaDom);
+                let lastChart = value.substring(point - 1, point);
+                console.log(lastChart);
+                insertContent('```\n\n```', this);
+                if (lastChart != '\n' && value != '') {
+                    range.setCaretPosition(textareaDom, point + 5);
+                } else {
+                    range.setCaretPosition(textareaDom, point + 4);
+                }
+            },
+            addStrikethrough: function() {
+                let textareaDom = document.querySelector('.mdEditor');
+                let value = textareaDom.value;
+                let point = range.getCursortPosition(textareaDom);
+                let lastChart = value.substring(point - 1, point);
+                console.log(lastChart);
+                insertContent('~~~~', this);
+                if (lastChart != '\n' && value != '') {
+                    range.setCaretPosition(textareaDom, point + 3);
+                } else {
+                    range.setCaretPosition(textareaDom, point + 2);
+                }
+            },
+            addStrong: function() {
+                let textareaDom = document.querySelector('.mdEditor');
+                let value = textareaDom.value;
+                let point = range.getCursortPosition(textareaDom);
+                let lastChart = value.substring(point - 1, point);
+                console.log(lastChart);
+                insertContent('****', this);
+                if (lastChart != '\n' && value != '') {
+                    range.setCaretPosition(textareaDom, point + 3);
+                } else {
+                    range.setCaretPosition(textareaDom, point + 2);
+                }
+            },
+            addItalic: function() {
+                let textareaDom = document.querySelector('.mdEditor');
+                let value = textareaDom.value;
+                let point = range.getCursortPosition(textareaDom);
+                let lastChart = value.substring(point - 1, point);
+                console.log(lastChart);
+                insertContent('**', this);
+                if (lastChart != '\n' && value != '') {
+                    range.setCaretPosition(textareaDom, point + 2);
+                } else {
+                    range.setCaretPosition(textareaDom, point + 1);
+                }
+            },
+            setStrong: function() {
+                let textareaDom = document.querySelector('.mdEditor');
+                let point = range.getCursortPosition(textareaDom);
+                console.log(point);
+            },
+            addLine: function() {
+                insertContent('\n----\n', this);
+            },
+            addLink: function() {
+                insertContent("[Vue](https://cn.vuejs.org/images/logo.png)", this);
+            },
+            addQuote: function() {
+                let textareaDom = document.querySelector('.mdEditor');
+                let value = textareaDom.value;
+                let point = range.getCursortPosition(textareaDom);
+                let lastChart = value.substring(point - 1, point);
+                console.log(lastChart);
+                insertContent('> ', this);
+                if (lastChart != '\n' && value != '') {
+                    range.setCaretPosition(textareaDom, point + 3);
+                } else {
+                    range.setCaretPosition(textareaDom, point + 2);
+                }
+            },
+            addTable: function() {
+                insertContent('header 1 | header 2\n', this);
+                insertContent('---|---\n', this);
+                insertContent('row 1 col 1 | row 1 col 2\n', this);
+                insertContent('row 2 col 1 | row 2 col 2\n\n', this);
+            },
+            addUl: function() {
+                insertContent('* ', this);
+            },
+            addOl: function() {
+                insertContent('1. ', this);
+            },
+            previewFn: function() {
+                if (!this.editStatus) {
+                    this.editStatus = true;
+                    this.previewStatus = !this.previewStatus;
+                } else {
+                    this.previewStatus = !this.previewStatus;
+                }
+            },
+            previewAllFn: function() {
+                if (!this.editStatus && this.previewStatus) {
+                    this.editStatus = true;
+                    this.previewStatus = true;
+                } else {
+                    this.editStatus = false;
+                    this.previewStatus = true;
+                }
+            },
+            fullPageFn: function() {
+                this.fullPageStatus = !this.fullPageStatus;
             }
         },
         computed: {
@@ -48,24 +244,38 @@
                     sanitize: true
                 })
             }
+        },
+        watch: {
+            input: function() {
+                console.log("aaa");
+                this.$emit('childevent', this.input);
+            }
         }
     }
 </script>
 
 <style lang="scss">
-    //引入reset文件
+    /*引入reset文件*/
+    
     @import "../../static/css/reset";
-    // 引入github的markdown样式文件
+    
+    /*引入github的markdown样式文件*/
+    
     @import "../../static/css/github-markdown.css";
-    // 引入atom的代码高亮样式文件
+    
+    /*引入atom的代码高亮样式文件*/
+    
     @import "../../static/css/atom-one-dark.min.css";
-    
-    /**/
-    
     .mdContainer {
         width: 100%;
         height: 100%;
         background: lightblue;
+        &.fullPage {
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+        }
         .navContainer {
             width: 100%;
             height: 36px;
@@ -79,11 +289,38 @@
             .nameContainer {
                 color: lightblue;
             }
+            .markContainer {
+                width: auto;
+                height: 100%;
+                margin-left: 10px;
+                ul.markListGroup {
+                    height: 100%;
+                    width: auto;
+                    display: flex;
+                    justify-content: flex-start;
+                    align-items: center;
+                    li.markListItem {
+                        list-style: none;
+                        width: 20px;
+                        height: 20px;
+                        margin: 0 2px;
+                        display: flex;
+                        justify-content: center;
+                        align-items: center;
+                        cursor: pointer;
+                        font-size: 12px;
+                        color: #333;
+                        &:hover {
+                            background: #eee;
+                        }
+                    }
+                }
+            }
         }
         .mdBodyContainer {
             width: 100%;
             height: calc(100% - 36px);
-            background: pink;
+            background: #fff;
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -94,7 +331,7 @@
     // 编辑区域
     .editContainer {
         height: 100%;
-        width: 50%;
+        width: 100%;
         box-sizing: border-box;
         border-right: 1px solid #ddd;
         background: #333;
@@ -112,7 +349,7 @@
     
     // 预览区
     .previewContainer {
-        width: 50%;
+        width: 100%;
         height: 100%;
         box-sizing: border-box;
         background: #fff;
