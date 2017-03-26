@@ -90,3 +90,15 @@ export default {
     }
 }
 ```
+## 效果展示
+
+![vue-mdeditor](http://odrfqp7tm.bkt.clouddn.com/markdownEditor.png)
+
+## 后期更新
+
+1. 更多的语法支持
+2. 更丰富的API文档
+3. 更人性化的使用方式
+4. 更傻瓜式的使用方式
+
+> 喜欢就关注一下吧。@_@!!!
