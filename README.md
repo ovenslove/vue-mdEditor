@@ -24,7 +24,7 @@ cnpm run build --report
 
 > 安装依赖
 ```bash
-// 本组件css采用sass编写，亦可修改为css(请自行修改)，核心依赖marked组件，请务必安装，谢谢
+# 本组件css采用sass编写，亦可修改为css(请自行修改)，核心依赖marked组件，请务必安装，谢谢
 cnpm i node-sass sass-loader marked -D
 ```
 > 配置要求
