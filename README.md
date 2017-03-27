@@ -1,20 +1,39 @@
 # vue-mdeditor
 
-> A Vue.js project
+> 基于VUE的markdown文本编辑器
+
+## 更新历史
+
+* 更新预告
+    * 编辑器双向同步滚动功能
+    * 未完待定。。
+* 2017/03/27  
+    * 新增顶部窗口配置
+    * 优化参数配置可能出现的bug
+    * 优化组件传值，增加html格式的输出内容，便于用户上传
+    * 修复文档部分错误
+* 2017/03/24 
+    * 初始化项目
+    * 完成基本的功能，包括：
+        
+        * H1-H6标题等快捷输入
+        * 编辑区域tab缩进
+        * 编译后文件预览并高亮
+        * VUE组件传值，配置输入和输出等
 
 ## 运行实例
 
 ``` bash
-# install dependencies
+# 安装依赖
 cnpm install
 
-# serve with hot reload at localhost:8080
+# 开启热更新服务器s在 localhost:4397 （4397为自定义端口，如果需要修改，请前往/config/index.js:26（port:4397）修改）
 cnpm run dev
 
-# build for production with minification
+# 打包压缩项目，并输出生产模式文件
 cnpm run build
 
-# build for production and view the bundle analyzer report
+# 打包压缩文件，过程带输出信息
 cnpm run build --report
 ```
 ## 使用方法
@@ -57,14 +76,16 @@ import range from '../../static/js/rangeFn.js'
 :mdValuesP="msg" 
 :fullPageStatusP="false" 
 :editStatusP="false" 
-:previewStatusP="false"  
+:previewStatusP="false"
+:navStatusP="false"  
 @childevent="childEventHandler">
 </markdown>
 <!--变量后面的大写P表示是从父组件中传入的参数-->
 <!--:mdValuesP="msg" 表示需要初始化传入编辑器的内容-->
 <!--:fullPageStatusP="false" 加载时是否全屏（true全屏/false跟随父容器）-->
 <!--:editStatusP="false" 加载时是否显示编辑容器（true显示/false不显示）-->
-<!--:previewStatusP="false" 加载时是否显示预览榕溪（true全屏/false不显示）-->
+<!--:previewStatusP="false" 加载时是否显示预览容器（true全屏/false不显示）-->
+<!--:navStatusP="false" 加载时是否显示顶部快速标签栏（true显示/false不显示）-->
 <!--@childevent="childEventHandler" 监听组件的$.emit()方法传回父组件的值，便于父容器保存获取-->
 
 ```
@@ -75,7 +96,9 @@ export default {
     name: 'index',
     data() {
         return {
-            msg: '## Vue-markdownEditor' 
+            msg: {
+                    mdValue:'## Vue-markdownEditor'
+                }
             //初始化markdown编辑器的内容，通过props传入子组件
         }
     },
@@ -85,6 +108,7 @@ export default {
     methods: {
         // 监听事件，接收子组件传过来的数据
         childEventHandler:function(res){
+        // res会传回一个data,包含属性mdValue和htmlValue，具体含义请自行翻译
             this.msg=res;
         }
     }
@@ -98,7 +122,7 @@ export default {
 
 1. 更多的语法支持
 2. 更丰富的API文档
-3. 更人性化的使用方式
-4. 更傻瓜式的使用方式
+3. 更人性化的使用体验
+4. 更傻瓜式的配置方式
 
 > 喜欢就关注一下吧。@_@!!!

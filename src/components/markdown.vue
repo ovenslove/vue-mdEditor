@@ -1,6 +1,6 @@
 <template>
     <div class="mdContainer" :class="{ fullPage: fullPageStatus }">
-        <div class="navContainer">
+        <div class="navContainer" v-if="navStatus">
             <div class="nameContainer">OVEN-mdEditor</div>
             <div class="markContainer">
                 <ul class="markListGroup">
@@ -74,13 +74,14 @@
     }
     export default {
         name: 'markdown',
-        props: ['mdValuesP', 'fullPageStatusP', 'editStatusP', 'previewStatusP'],
+        props: ['mdValuesP', 'fullPageStatusP', 'editStatusP', 'previewStatusP','navStatusP'],
         data() {
             return {
-                input: this.mdValuesP,
-                editStatus: this.editStatusP,
-                previewStatus: this.previewStatusP,
-                fullPageStatus: this.fullPageStatusP
+                input: this.mdValuesP || '',
+                editStatus: this.editStatusP || true,
+                previewStatus: this.previewStatusP || true,
+                fullPageStatus: this.fullPageStatusP || false,
+                navStatus:this.navStatusP || true
             }
         },
         created: function() {
@@ -248,7 +249,10 @@
         watch: {
             input: function() {
                 console.log("aaa");
-                this.$emit('childevent', this.input);
+                let data={};
+                data.mdValue=this.input;
+                data.htmlValue=marked(this.input, {sanitize: true});
+                this.$emit('childevent', data);
             }
         }
     }

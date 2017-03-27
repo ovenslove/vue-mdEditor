@@ -1,7 +1,7 @@
 <template>
     <div class="indexContainer">
         <div class="editorContainer">
-            <markdown :mdValuesP="msg" :fullPageStatusP="false" :editStatusP="false" :previewStatusP="false"  @childevent="childEventHandler"></markdown>
+            <markdown :mdValuesP="msg.mdValue" :fullPageStatusP="false" :editStatusP="false" :previewStatusP="false" :navStatusP="false"  @childevent="childEventHandler"></markdown>
         </div>
     </div>
 </template>
@@ -12,7 +12,9 @@
         name: 'index',
         data() {
             return {
-                msg: '## Vue-markdownEditor'
+                msg: {
+                    mdValue:'## Vue-markdownEditor'
+                }
             }
         },
         components: {
@@ -20,6 +22,7 @@
         },
         methods: {
             childEventHandler:function(res){
+                // res会传回一个data,包含属性mdValue和htmlValue，具体含义请自行翻译
                 this.msg=res;
             }
         }
