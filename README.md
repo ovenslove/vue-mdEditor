@@ -92,7 +92,7 @@ export default {
 ```
 ## 效果展示
 
-![vue-mdeditor](http://odrfqp7tm.bkt.clouddn.com/markdownEditor.png)
+![vue-mdeditor](http://static-oven.b0.upaiyun.com/github-resource/markdownEditor.png)
 
 ## 后期更新
 
