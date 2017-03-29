@@ -26,6 +26,11 @@
         * 编译后文件预览并高亮
         * VUE组件传值，配置输入和输出等
 
+## DEMO案例
+>  我知道你想先看看效果，特意准备了在线DEMO，点进去看看吧
+
+**传送门** ======> [vue-mdeditor](https://ovenslove.github.io/vue-mdEditor/)
+
 ## 运行实例
 
 ``` bash
