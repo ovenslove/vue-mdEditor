@@ -1,7 +1,7 @@
 <template>
     <div class="mdContainer" :class="{ fullPage: fullPageStatus }">
         <div class="navContainer" v-if="navStatus">
-            <div class="nameContainer">OVEN-mdEditor</div>
+            <div class="nameContainer" v-if="icoStatusP" @click="happyDay">OVEN-mdEditor</div>
             <div class="markContainer">
                 <ul class="markListGroup">
                     <li class="markListItem" @click="addStrong" title="strong"><b>B</b></li>
@@ -30,18 +30,21 @@
         </div>
         <div class="mdBodyContainer">
             <div class="editContainer" v-if="editStatus">
-                <textarea name="" class="mdEditor" @keydown.9="tabFn" v-model="input"></textarea>
+                <textarea name="" class="mdEditor" @keydown.9="tabFn" v-scroll="editScroll" v-model="input"></textarea>
             </div>
-            <div class="previewContainer markdown-body" v-html="compiledMarkdown" v-if="previewStatus">
+            <div class="previewContainer markdown-body" v-scroll="previewScroll" v-html="compiledMarkdown" v-if="previewStatus">
             </div>
         </div>
     </div>
 </template>
 
 <script>
-    var marked = require('marked');
+    import Vue from 'vue'
+    import marked from 'marked'
+    import scroll from 'vue-scroll'
     import hljs from '../../static/js/highlight.min.js'
     import range from '../../static/js/rangeFn.js'
+    Vue.use(scroll)
     marked.setOptions({
         renderer: new marked.Renderer(),
         gfm: true,
@@ -68,20 +71,21 @@
         } else {
             range.insertAfterText(textareaDom, val);
         }
-    
         that.input = document.querySelector('.mdEditor').value;
-    
     }
     export default {
         name: 'markdown',
-        props: ['mdValuesP', 'fullPageStatusP', 'editStatusP', 'previewStatusP','navStatusP'],
+        props: ['mdValuesP', 'fullPageStatusP', 'editStatusP', 'previewStatusP', 'navStatusP', 'icoStatusP'],
         data() {
             return {
                 input: this.mdValuesP || '',
                 editStatus: this.editStatusP || true,
                 previewStatus: this.previewStatusP || true,
                 fullPageStatus: this.fullPageStatusP || false,
-                navStatus:this.navStatusP || true
+                navStatus: this.navStatusP || true,
+                icoStatus: this.icoStatusP || true,
+                maxEditScrollHeight:0,
+                maxPreviewScrollHeight:0
             }
         },
         created: function() {
@@ -100,7 +104,6 @@
                     evt.returnValue = false;
                 }
             },
-            // 添加图片
             addImage: function(evt) {
                 insertContent("![Vue](https://cn.vuejs.org/images/logo.png)", this);
             },
@@ -135,7 +138,6 @@
                 let value = textareaDom.value;
                 let point = range.getCursortPosition(textareaDom);
                 let lastChart = value.substring(point - 1, point);
-                console.log(lastChart);
                 insertContent('```\n\n```', this);
                 if (lastChart != '\n' && value != '') {
                     range.setCaretPosition(textareaDom, point + 5);
@@ -148,7 +150,6 @@
                 let value = textareaDom.value;
                 let point = range.getCursortPosition(textareaDom);
                 let lastChart = value.substring(point - 1, point);
-                console.log(lastChart);
                 insertContent('~~~~', this);
                 if (lastChart != '\n' && value != '') {
                     range.setCaretPosition(textareaDom, point + 3);
@@ -161,7 +162,6 @@
                 let value = textareaDom.value;
                 let point = range.getCursortPosition(textareaDom);
                 let lastChart = value.substring(point - 1, point);
-                console.log(lastChart);
                 insertContent('****', this);
                 if (lastChart != '\n' && value != '') {
                     range.setCaretPosition(textareaDom, point + 3);
@@ -174,7 +174,6 @@
                 let value = textareaDom.value;
                 let point = range.getCursortPosition(textareaDom);
                 let lastChart = value.substring(point - 1, point);
-                console.log(lastChart);
                 insertContent('**', this);
                 if (lastChart != '\n' && value != '') {
                     range.setCaretPosition(textareaDom, point + 2);
@@ -185,7 +184,6 @@
             setStrong: function() {
                 let textareaDom = document.querySelector('.mdEditor');
                 let point = range.getCursortPosition(textareaDom);
-                console.log(point);
             },
             addLine: function() {
                 insertContent('\n----\n', this);
@@ -198,7 +196,6 @@
                 let value = textareaDom.value;
                 let point = range.getCursortPosition(textareaDom);
                 let lastChart = value.substring(point - 1, point);
-                console.log(lastChart);
                 insertContent('> ', this);
                 if (lastChart != '\n' && value != '') {
                     range.setCaretPosition(textareaDom, point + 3);
@@ -207,7 +204,7 @@
                 }
             },
             addTable: function() {
-                insertContent('header 1 | header 2\n', this);
+                insertContent('\nheader 1 | header 2\n', this);
                 insertContent('---|---\n', this);
                 insertContent('row 1 col 1 | row 1 col 2\n', this);
                 insertContent('row 2 col 1 | row 2 col 2\n\n', this);
@@ -237,6 +234,25 @@
             },
             fullPageFn: function() {
                 this.fullPageStatus = !this.fullPageStatus;
+                let maxEditScrollHeight=document.querySelector('.mdEditor').scrollHeight-document.querySelector('.mdEditor').clientHeight;
+                let maxPreviewScrollHeight=document.querySelector('.previewContainer').scrollHeight-document.querySelector('.previewContainer').clientHeight;
+                this.maxEditScrollHeight = maxEditScrollHeight
+                this.maxPreviewScrollHeight = maxPreviewScrollHeight
+            },
+            previewScroll: function(e, position) {
+                if(this.maxEditScrollHeight!==0){
+                    let topPercent=position.scrollTop/this.maxPreviewScrollHeight;
+                    document.querySelector('.mdEditor').scrollTop = this.maxEditScrollHeight*topPercent;
+                }
+            },
+            editScroll:function(e, position){
+                if(this.maxPreviewScrollHeight!==0){
+                    let topPercent=position.scrollTop/this.maxEditScrollHeight;
+                    document.querySelector('.previewContainer').scrollTop = this.maxPreviewScrollHeight*topPercent;
+                }
+            },
+            happyDay:function(){
+                window.open('https://github.com/ovenslove/vue-mdEditor');
             }
         },
         computed: {
@@ -248,11 +264,16 @@
         },
         watch: {
             input: function() {
-                console.log("aaa");
-                let data={};
-                data.mdValue=this.input;
-                data.htmlValue=marked(this.input, {sanitize: true});
+                let data = {};
+                data.mdValue = this.input;
+                data.htmlValue = marked(this.input, {
+                    sanitize: true
+                });
                 this.$emit('childevent', data);
+                let maxEditScrollHeight=document.querySelector('.mdEditor').scrollHeight-document.querySelector('.mdEditor').clientHeight;
+                let maxPreviewScrollHeight=document.querySelector('.previewContainer').scrollHeight-document.querySelector('.previewContainer').clientHeight;
+                this.maxEditScrollHeight = maxEditScrollHeight
+                this.maxPreviewScrollHeight = maxPreviewScrollHeight
             }
         }
     }
@@ -292,11 +313,13 @@
             padding: 0 10px;
             .nameContainer {
                 color: lightblue;
+                margin-right: 10px;
+                cursor:pointer;
             }
             .markContainer {
                 width: auto;
                 height: 100%;
-                margin-left: 10px;
+                margin-left: 0px;
                 ul.markListGroup {
                     height: 100%;
                     width: auto;

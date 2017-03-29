@@ -1,7 +1,15 @@
 <template>
     <div class="indexContainer">
         <div class="editorContainer">
-            <markdown :mdValuesP="msg.mdValue" :fullPageStatusP="false" :editStatusP="false" :previewStatusP="false" :navStatusP="false"  @childevent="childEventHandler"></markdown>
+            <markdown 
+            :mdValuesP="msg.mdValue"  
+            :fullPageStatusP="false" 
+            :editStatusP="false" 
+            :previewStatusP="false" 
+            :navStatusP="false"
+            :icoStatusP="true"  
+            @childevent="childEventHandler"
+            ></markdown>
         </div>
     </div>
 </template>

@@ -5,8 +5,13 @@
 ## 更新历史
 
 * 更新预告
-    * 编辑器双向同步滚动功能
+    * 编辑器主题配置功能
     * 未完待定。。
+* 2017/03/29
+    * 编辑器双向同步滚动功能
+    * 支持配置左上角版权标志（吃水不忘挖井人，谢过了）,
+    * 优化表格快捷输入
+    * 其他优化
 * 2017/03/27  
     * 新增顶部窗口配置
     * 优化参数配置可能出现的bug
@@ -44,7 +49,11 @@ cnpm run build --report
 > 安装依赖
 ```bash
 # 本组件css采用sass编写，亦可修改为css(请自行修改)，核心依赖marked组件，请务必安装，谢谢
-cnpm i node-sass sass-loader marked -D
+# markdown编译依赖 marked 地址：https://www.npmjs.com/package/marked
+# 同步滚动依赖 vue-scroll 地址：https://www.npmjs.com/package/vue-scroll
+cnpm i marked vue-scroll --save
+
+cnpm i node-sass sass-loader  --save-dev
 ```
 > 配置要求
 ```html
@@ -53,7 +62,10 @@ cnpm i node-sass sass-loader marked -D
 ```
 ```javascript
 // 根据项目修改引入文件的路径（所需文件放在了static目录下）
-var marked = require('marked');
+import Vue from 'vue'
+import marked from 'marked'
+import scroll from 'vue-scroll'
+Vue.use(scroll)
 import hljs from '../../static/js/highlight.min.js'
 import range from '../../static/js/rangeFn.js'
 ```
@@ -78,6 +90,7 @@ import range from '../../static/js/rangeFn.js'
 :editStatusP="false" 
 :previewStatusP="false"
 :navStatusP="false"  
+:icoStatusP="true"  
 @childevent="childEventHandler">
 </markdown>
 <!--变量后面的大写P表示是从父组件中传入的参数-->
@@ -86,6 +99,7 @@ import range from '../../static/js/rangeFn.js'
 <!--:editStatusP="false" 加载时是否显示编辑容器（true显示/false不显示）-->
 <!--:previewStatusP="false" 加载时是否显示预览容器（true全屏/false不显示）-->
 <!--:navStatusP="false" 加载时是否显示顶部快速标签栏（true显示/false不显示）-->
+<!--:icoStatusP="false" 加载时是否显示版权标志（true显示/false不显示）,如果取消掉，请勿忘挖井人，谢谢！-->
 <!--@childevent="childEventHandler" 监听组件的$.emit()方法传回父组件的值，便于父容器保存获取-->
 
 ```
