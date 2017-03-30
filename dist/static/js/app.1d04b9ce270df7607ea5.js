@@ -397,6 +397,47 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
   return _c('div', {
     staticClass: "indexContainer"
   }, [_c('div', {
+    staticClass: "btnsContainer"
+  }, [_c('div', {
+    staticClass: "btn",
+    on: {
+      "click": _vm.getMdValueFn
+    }
+  }, [_vm._v("获取mdValue")]), _vm._v(" "), _c('div', {
+    staticClass: "btn",
+    on: {
+      "click": _vm.getHtmlValueFn
+    }
+  }, [_vm._v("获取htmlValue")])]), _vm._v(" "), (_vm.dilogStatus) ? _c('div', {
+    staticClass: "maskContainer"
+  }, [_c('div', {
+    staticClass: "contentContainer"
+  }, [_c('div', {
+    staticClass: "closeBtnContainer",
+    on: {
+      "click": _vm.closeMaskFn
+    }
+  }), _vm._v(" "), _c('textarea', {
+    directives: [{
+      name: "model",
+      rawName: "v-model",
+      value: (_vm.msgShow),
+      expression: "msgShow"
+    }],
+    staticClass: "showAreaContainer",
+    attrs: {
+      "readonly": ""
+    },
+    domProps: {
+      "value": (_vm.msgShow)
+    },
+    on: {
+      "input": function($event) {
+        if ($event.target.composing) { return; }
+        _vm.msgShow = $event.target.value
+      }
+    }
+  })])]) : _vm._e(), _vm._v(" "), _c('div', {
     staticClass: "editorContainer"
   }, [_c('markdown', {
     attrs: {
@@ -463,6 +504,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
     name: 'index',
     data: function data() {
         return {
+            msgShow: '我要显示的内容',
+            dilogStatus: false,
             msg: {
                 mdValue: '## Vue-markdownEditor'
             }
@@ -475,6 +518,18 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
     methods: {
         childEventHandler: function childEventHandler(res) {
             this.msg = res;
+        },
+        getMdValueFn: function getMdValueFn() {
+            this.msgShow = this.msg.mdValue;
+            this.dilogStatus = true;
+        },
+        getHtmlValueFn: function getHtmlValueFn() {
+            this.msgShow = this.msg.htmlValue;
+            this.dilogStatus = true;
+        },
+        closeMaskFn: function closeMaskFn() {
+            this.msgShow = '';
+            this.dilogStatus = false;
         }
     }
 });
@@ -905,4 +960,4 @@ module.exports = {
 
 /***/ })
 ],[22]);
-//# sourceMappingURL=app.cc45bf89d58524d7ea96.js.map
+//# sourceMappingURL=app.1d04b9ce270df7607ea5.js.map
