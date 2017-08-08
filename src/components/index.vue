@@ -16,8 +16,8 @@
             :fullPageStatusP="false" 
             :editStatusP="true" 
             :previewStatusP="true" 
-            :navStatusP="false"
-            :icoStatusP="false"  
+            :navStatusP="true"
+            :icoStatusP="true"  
             @childevent="childEventHandler"
             ></markdown>
         </div>

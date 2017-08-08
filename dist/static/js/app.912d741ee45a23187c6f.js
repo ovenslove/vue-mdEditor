@@ -448,8 +448,8 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
       "fullPageStatusP": false,
       "editStatusP": true,
       "previewStatusP": true,
-      "navStatusP": false,
-      "icoStatusP": false
+      "navStatusP": true,
+      "icoStatusP": true
     },
     on: {
       "childevent": _vm.childEventHandler
@@ -963,4 +963,4 @@ module.exports = {
 
 /***/ })
 ],[22]);
-//# sourceMappingURL=app.b74eaddc22a4052e2b20.js.map
+//# sourceMappingURL=app.912d741ee45a23187c6f.js.map
