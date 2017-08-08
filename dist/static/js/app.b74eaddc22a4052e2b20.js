@@ -331,7 +331,10 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
       "aria-hidden": "true"
     }
   })])])])]) : _vm._e(), _vm._v(" "), _c('div', {
-    staticClass: "mdBodyContainer"
+    staticClass: "mdBodyContainer",
+    class: {
+      noMenu: !_vm.navStatus
+    }
   }, [(_vm.editStatus) ? _c('div', {
     staticClass: "editContainer"
   }, [_c('textarea', {
@@ -443,10 +446,10 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     attrs: {
       "mdValuesP": _vm.msg.mdValue,
       "fullPageStatusP": false,
-      "editStatusP": false,
-      "previewStatusP": false,
+      "editStatusP": true,
+      "previewStatusP": true,
       "navStatusP": false,
-      "icoStatusP": true
+      "icoStatusP": false
     },
     on: {
       "childevent": _vm.childEventHandler
@@ -591,11 +594,11 @@ function insertContent(val, that) {
     data: function data() {
         return {
             input: this.mdValuesP || '',
-            editStatus: this.editStatusP || true,
-            previewStatus: this.previewStatusP || true,
-            fullPageStatus: this.fullPageStatusP || false,
-            navStatus: this.navStatusP || true,
-            icoStatus: this.icoStatusP || true,
+            editStatus: Boolean(this.editStatusP),
+            previewStatus: Boolean(this.previewStatusP),
+            fullPageStatus: Boolean(this.fullPageStatusP),
+            navStatus: Boolean(this.navStatusP),
+            icoStatus: Boolean(this.icoStatusP),
             maxEditScrollHeight: 0,
             maxPreviewScrollHeight: 0
         };
@@ -960,4 +963,4 @@ module.exports = {
 
 /***/ })
 ],[22]);
-//# sourceMappingURL=app.1d04b9ce270df7607ea5.js.map
+//# sourceMappingURL=app.b74eaddc22a4052e2b20.js.map

@@ -14,10 +14,10 @@
             <markdown 
             :mdValuesP="msg.mdValue"  
             :fullPageStatusP="false" 
-            :editStatusP="false" 
-            :previewStatusP="false" 
+            :editStatusP="true" 
+            :previewStatusP="true" 
             :navStatusP="false"
-            :icoStatusP="true"  
+            :icoStatusP="false"  
             @childevent="childEventHandler"
             ></markdown>
         </div>

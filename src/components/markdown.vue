@@ -28,7 +28,7 @@
     
             </div>
         </div>
-        <div class="mdBodyContainer">
+        <div class="mdBodyContainer" :class="{ noMenu: !navStatus }">
             <div class="editContainer" v-if="editStatus">
                 <textarea name="" class="mdEditor" @keydown.9="tabFn" v-scroll="editScroll" v-model="input"></textarea>
             </div>
@@ -79,11 +79,11 @@
         data() {
             return {
                 input: this.mdValuesP || '',
-                editStatus: this.editStatusP || true,
-                previewStatus: this.previewStatusP || true,
-                fullPageStatus: this.fullPageStatusP || false,
-                navStatus: this.navStatusP || true,
-                icoStatus: this.icoStatusP || true,
+                editStatus: Boolean(this.editStatusP),
+                previewStatus: Boolean(this.previewStatusP),
+                fullPageStatus: Boolean(this.fullPageStatusP),
+                navStatus: Boolean(this.navStatusP),
+                icoStatus: Boolean(this.icoStatusP),
                 maxEditScrollHeight:0,
                 maxPreviewScrollHeight:0
             }
@@ -352,6 +352,9 @@
             justify-content: space-between;
             align-items: center;
             box-sizing: border-box;
+            &.noMenu{
+                height: 100%;
+            }
         }
     }
     
